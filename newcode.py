@@ -1,7 +1,7 @@
 import requests
-import re
 from bs4 import BeautifulSoup
-
+import re
+import docx
 
 def get_html(url):
     headers = {
@@ -12,12 +12,20 @@ def get_html(url):
     response = requests.get(url, headers=headers)  # 请求访问网站
     html = response.text  # 获取网页源码
     return html  # 返回网页源码
+file=docx.Document()
+for i in range(1,120):
+    soup = BeautifulSoup(get_html('https://www.nowcoder.com/ta/review-java/review?page='+str(i)), 'html.parser')  # 初始化BeautifulSoup库,并设置解析器
+    #print(get_html('https://www.nowcoder.com/ta/review-java/review?page=2'))
+    question=soup.find_all('div',attrs={'class':'final-question'})
+    answer = soup.find_all('div',attrs={'class':'design-answer-box'})
+    file.add_paragraph(str(i)+'.'+question[0].string)
+    file.add_paragraph('答：'+str(answer[0]))
+file.save("C:\\Users\\幻夜~星辰\\Desktop\work\\newcode.docx")
 
 
-soup = BeautifulSoup(get_html('https://www.nowcoder.com/ta/review-java/review?page=2'), 'html.parser')  # 初始化BeautifulSoup库,并设置解析器
-#print(get_html('https://www.nowcoder.com/ta/review-java/review?page=2'))
-question = soup.findAll('div',attrs={'class':'design-answer-box'})
-answer=soup.findAll('div',attrs={'class':'final-question'})
-print(question)
-print(answer)
+
+
+
+
+
 
